@@ -13,6 +13,53 @@
 \usepackage{array} % Required for Table Column Text Alignment with Custom Widths
 \usepackage{titlesec} % Set font style
 \usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Define your custom colors
+\definecolor{bashblue}{rgb}{0.2,0.4,0.8}
+\definecolor{bashgreen}{rgb}{0.2,0.6,0.2}
+\definecolor{bashgray}{rgb}{0.5,0.5,0.5}
+\definecolor{bashpurple}{rgb}{0.6,0.1,0.6}
+\definecolor{bashred}{rgb}{0.6,0.1,0.1}
+
+% Setup the listings package to use colors for Bash code
+\lstdefinestyle{bashstyle}{
+    language=bash,
+    basicstyle=\small\ttfamily,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{bashblue},
+    commentstyle=\color{bashgreen},
+    stringstyle=\color{bashred},
+    numberstyle=\color{bashgray},
+    rulecolor=\color{black},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    gobble=2,
+    numbers=left,
+    frame=single,
+    numbersep=8pt, % Space between numbers and code
+}
+
+
+\lstnewenvironment{bashlisting}[2][]
+{%
+    \ifthenelse{\equal{#1}{}} % Check if the optional parameter is empty
+    {%
+        \lstset{style=bashstyle, caption={\bfseries\centering#2}} % If empty, set only the caption
+    }
+    {%
+        \lstset{style=bashstyle, caption={\bfseries\centering#2}, #1} % If not empty, set the caption and additional options
+    }
+    \minipage[t]{.93\linewidth}%
+}
+{\endminipage}
 
 \usetikzlibrary{calc}
 \renewcommand{\baselinestretch}{1.2}
@@ -35,12 +82,13 @@
 
 
 \renewcommand{\figurename}{\fontsize{12pt}{0pt}\selectfont \bfseries Hình}
-\renewcommand{\thefigure}{\arabic{figure}}
-% \captionsetup[figure]{labelsep=space}
+% \renewcommand{\thefigure}{\arabic{figure}}
 
 \renewcommand{\tablename}{\fontsize{12pt}{0pt}\selectfont \bfseries Bảng}
 \renewcommand{\thetable}{\arabic{table}}
-% \captionsetup[table]{labelsep=space}
+
+\renewcommand{\lstlistingname}{\fontsize{12pt}{0pt}\selectfont \bfseries Đoạn mã}
+% \renewcommand{\thetable}{\arabic{table}}
 
 \usepackage{lipsum}
 \renewcommand{\contentsname}{MỤC LỤC}
@@ -101,7 +149,7 @@ các dịch vụ mạng phục vụ cho công việc của công ty như sau:
   \caption{\bfseries Sơ đồ hệ thống mạng của công ty Tam Quốc}
 \end{minipage}
 
-\renewcommand{\arraystretch}{1.5}
+% \renewcommand{\arraystretch}{1.5}
 \setcounter{subsection}{0}
 \pagenumbering{arabic}
 \input{chapter-1/index}

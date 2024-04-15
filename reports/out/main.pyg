@@ -1,0 +1,1 @@
+  echo the $# parameter did not destroy pygments syntax highlighting
