@@ -10,11 +10,7 @@
 
 \phantomsection
 \subsubsection{Cài đặt dịch vụ DHCP}
-\begin{minipage}{.93\linewidth}
-  \captionsetup{type=figure, skip=-15pt}
-  \includegraphics[width=\linewidth]{./imgs/image51.png}
-  \caption{\bfseries Cài đặt dịch vụ \texttt{dchp-server}}
-\end{minipage}
+\figminiskip{./imgs/image51.png}{fig:installing-dhcp}{Cài đặt dịch vụ \texttt{dchp-server}}
 
 \vspace{0.5cm}
 \begin{bashlisting}{Cài đặt dịch vụ \texttt{dchp-server}}
@@ -27,12 +23,7 @@
 Ta chỉnh sửa nội dung file \texttt{/etc/dhcp/dhcpd.conf} để cấu hình dịch vụ DHCP
 \textit{(\myref{fig:config-dhcp})}.
 
-\begin{minipage}{.93\linewidth}
-  \captionsetup{type=figure, skip=-15pt}
-  \includegraphics[width=\linewidth]{./imgs/Hinh-18.png}
-  \caption{\bfseries Cấu hình dịch vụ DHCP}
-  \label{fig:config-dhcp}
-\end{minipage}
+\figminiskip{./imgs/Hinh-18.png}{fig:config-dhcp}{Cấu hình dịch vụ DHCP}
 
 Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
 
@@ -61,11 +52,8 @@ Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
 
 \phantomsection
 \subsubsection{Khởi động dịch vụ DHCP}
-\begin{minipage}{.93\linewidth}
-  \captionsetup{type=figure, skip=-15pt}
-  \includegraphics[width=\linewidth]{./imgs/Hinh-19.png}
-  \caption{\bfseries Khởi động dịch vụ DHCP}
-\end{minipage}
+\figminiskip{./imgs/Hinh-19.png}{fig:start-dhcp}{Khởi động dịch vụ DHCP}
+
 
 \vspace{0.5cm}
 \begin{bashlisting}{Khởi động dịch vụ DHCP}
@@ -79,16 +67,6 @@ Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
 Sau khi cấu hình xong DHCP, ta sẽ dùng máy desktop \textit{(\myref{fig:access-website})} để kiểm tra bằng cách kết nối vào mạng \texttt{QTHT} và kiểm tra địa chỉ \texttt{IP}
 của máy desktop \textit{(\myref{fig:check-ip})}.
 
-\begin{minipage}{.93\linewidth}
-  \captionsetup{type=figure, skip=-15pt}
-  \includegraphics[width=\linewidth]{./imgs/Hinh-20.png}
-  \caption{\bfseries Truy cập vào internet bằng máy desktop}
-  \label{fig:access-website}
-\end{minipage}
+\figminiskip{./imgs/Hinh-20.png}{fig:access-website}{Truy cập vào internet bằng máy desktop}
 
-\begin{minipage}{.93\linewidth}
-  \captionsetup{type=figure, skip=-15pt}
-  \includegraphics[width=\linewidth]{./imgs/Hinh-21.png}
-  \caption{\bfseries Kiểm tra địa chỉ IP của máy desktop (10.0.2.50)}
-  \label{fig:check-ip}
-\end{minipage}
+\figminiskip{./imgs/Hinh-21.png}{fig:check-ip}{Kiểm tra địa chỉ IP của máy desktop (10.0.2.50)}

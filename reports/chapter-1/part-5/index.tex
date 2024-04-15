@@ -1,3 +1,27 @@
 \phantomsection
 \subsection{(10\%) Cài đặt và cấu hình dịch vụ SSH để cho phép điều khiển từ xa server}
-\setcounter{figure}{0}
+
+
+\begin{itemize}
+  \item [--] Chỉ có thành viên ban giám đốc và các trưởng phòng mới có quyền điều khiển từ xa server. Tài khoản root không được nối kết tới server từ xa.
+  \item [--] Chỉ cho phép chứng thực bằng private key, không cho phép chứng thực bằng password. Tạo private/public key cho người dùng Gia Cát Lượng để có SSH tới server.
+\end{itemize}
+
+\phantomsection
+\subsubsection{Cài đặt dịch vụ SSH}
+\figminiskip{./imgs/Hinh-22.png}{fig:installing-ssh}{Cài đặt và kích hoạt dịch vụ openssh-server}
+
+
+\vspace{0.5cm}
+\begin{bashlisting}{Cài đặt và kích hoạt dịch vụ openssh-server}
+  sudo dnf install openssh-server -y
+  sudo systemctl start sshd
+  sudo systemctl enable sshd
+\end{bashlisting}
+
+\phantomsection
+\subsubsection{Cấu hình chỉ cho phép thành viên trong ban giám đốc và các trưởng phòng mới có quyền điều khiển từ xa}
+
+Ta sẽ cấu hình file \texttt{/etc/ssh/sshd\_config} \textit{(\myref{fig:config-sshd})} để cấu hình chỉ cho phép một nhóm người dùng hoặc người dùng có thể sử dụng dịch vụ SSH.
+
+\figminiskip{./imgs/Hinh-23.png}{fig:config-sshd}{Cấu hình cái gì chỉ cho phép \texttt{bangiamdoc} và \texttt{truongphong} sử dụng dịch vụ SSH}
