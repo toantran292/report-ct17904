@@ -8,7 +8,7 @@ Cấp quyền sudo cho người dùng Gia Cát Lượng.
 \begin{minipage}{.93\linewidth}
   \centering
   \captionsetup{type=table}
-  \caption{\bfseries Danh sách người dùng và nhóm người dùng}
+  \caption{Danh sách người dùng và nhóm người dùng}
   {\small
     \begin{tabular}{| c | c | c | c | c | c |}
       \hline
@@ -35,17 +35,17 @@ và đặt mật khẩu cho tài khoản Lưu Bị \textit{(\myref{fig:useradd-l
 \figminiskip{./imgs/Hinh-12.png}{fig:useradd-luubi}{Tạo và đặt mật khẩu cho tài khoản Lưu Bị}
 
 \vspace{0.5cm}
-\begin{bashlisting}{Tạo và đặt mật khẩu cho tài khoản Lưu Bị}
+\begin{coding}{Tạo và đặt mật khẩu cho tài khoản Lưu Bị}
   sudo useradd bi.luu
   sudo passwd bi.luu
-\end{bashlisting}
+\end{coding}
 
 Các tài khoản còn lại thực hiện tương tự \textit{(\myref{fig:useradd-other})}.
 
 \figminiskip{./imgs/Hinh-13.png}{fig:useradd-other}{Tạo và đặt mật khẩu cho các tài khoản còn lại}
 
 \vspace{0.5cm}
-\begin{bashlisting}{Tạo và đặt mật khẩu cho các tài khoản còn lại}
+\begin{coding}{Tạo và đặt mật khẩu cho các tài khoản còn lại}
   sudo useradd bi.luu
   sudo passwd bi.luu
   sudo useradd luong.giacat
@@ -60,7 +60,7 @@ Các tài khoản còn lại thực hiện tương tự \textit{(\myref{fig:user
   sudo passwd sieu.ma
   sudo useradd trung.hoang
   sudo passwd trung.hoang
-\end{bashlisting}
+\end{coding}
 
 \phantomsection
 \subsubsection{Tạo nhóm người dùng và thêm người dùng vào nhóm}
@@ -74,11 +74,11 @@ nhóm này \textit{(\myref{fig:groupadd-bangiamdoc})}.
 
 
 \vspace{0.5cm}
-\begin{bashlisting}{Tạo nhóm \texttt{bangiamdoc} và thêm người dùng vào}
+\begin{coding}{Tạo nhóm \texttt{bangiamdoc} và thêm người dùng vào}
   sudo groupadd bangiamdoc
   sudo usermod -aG bangiamdoc bi.luu
   sudo usermod -aG bangiamdoc luong.giacat
-\end{bashlisting}
+\end{coding}
 
 Các nhóm còn lại thực hiện tương tự \textit{(\myref{fig:groupadd-other})}.
 
@@ -86,7 +86,7 @@ Các nhóm còn lại thực hiện tương tự \textit{(\myref{fig:groupadd-ot
 
 
 \vspace{0.5cm}
-\begin{bashlisting}{Tạo nhóm còn lại và thêm người dùng vào}
+\begin{coding}{Tạo nhóm còn lại và thêm người dùng vào}
   sudo groupadd hanhchanh
   sudo usermod -aG hanhchanh vu.quan
   sudo usermod -aG hanhchanh phi.truong
@@ -94,7 +94,7 @@ Các nhóm còn lại thực hiện tương tự \textit{(\myref{fig:groupadd-ot
   sudo usermod -aG banhang van.trieu
   sudo usermod -aG banhang sieu.ma
   sudo usermod -aG banhang trung.hoang
-\end{bashlisting}
+\end{coding}
 
 
 \phantomsection
@@ -107,6 +107,6 @@ Các nhóm còn lại thực hiện tương tự \textit{(\myref{fig:groupadd-ot
 \figminiskip{./imgs/Hinh-16.png}{fig:groupadd-wheel}{Cấp quyền sudo cho người dùng Gia Cát Lượng}
 
 \vspace{0.5cm}
-\begin{bashlisting}{Cấp quyền sudo cho người dùng Gia Cát Lượng}
+\begin{coding}{Cấp quyền sudo cho người dùng Gia Cát Lượng}
   sudo usermod -aG wheel luong.giacat
-\end{bashlisting}
+\end{coding}

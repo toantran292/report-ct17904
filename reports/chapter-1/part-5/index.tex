@@ -13,15 +13,67 @@
 
 
 \vspace{0.5cm}
-\begin{bashlisting}{Cài đặt và kích hoạt dịch vụ openssh-server}
+\begin{coding}{Cài đặt và kích hoạt dịch vụ openssh-server}
   sudo dnf install openssh-server -y
   sudo systemctl start sshd
   sudo systemctl enable sshd
-\end{bashlisting}
+\end{coding}
 
 \phantomsection
 \subsubsection{Cấu hình chỉ cho phép thành viên trong ban giám đốc và các trưởng phòng mới có quyền điều khiển từ xa}
 
 Ta sẽ cấu hình file \texttt{/etc/ssh/sshd\_config} \textit{(\myref{fig:config-sshd})} để cấu hình chỉ cho phép một nhóm người dùng hoặc người dùng có thể sử dụng dịch vụ SSH.
 
-\figminiskip{./imgs/Hinh-23.png}{fig:config-sshd}{Cấu hình cái gì chỉ cho phép \texttt{bangiamdoc} và \texttt{truongphong} sử dụng dịch vụ SSH}
+\figminiskip{./imgs/Hinh-23.png}{fig:config-sshd}{Cấu hình chỉ cho phép \texttt{bangiamdoc} và \texttt{truongphong} sử dụng dịch vụ SSH để điều khiển từ xa}
+
+\begin{itemize}[label={}]
+  \item
+        \begin{itemize}[label={--}]
+          \item \texttt{AllowGroups bangiamdoc truongnhom}: Cho phép nhóm \texttt{bangiamdoc} và nhóm \texttt{truongnhom} sử dụng dịch vụ ssh.
+        \end{itemize}
+\end{itemize}
+
+Ta cần khởi động lại dịch vụ ssh để áp dụng những thay đổi này (dùng lệnh \texttt{systemctl restart sshd}).
+
+\phantomsection
+\subsubsection{Chỉ cho phép chứng thực bằng private key}
+
+Để cấu hình chỉ cho phép chứng thực bằng private key, ta sẽ cấu hình trong file \texttt{/etc/ssh/sshd\_config} \textit{(\myref{fig:config-sshd-2})}
+
+\figminiskip{./imgs/Hinh-24.png}{fig:config-sshd-2}{Cấu hình chỉ cho phép chứng thực bằng private key}
+
+\begin{itemize}[label={}]
+  \item
+        \begin{itemize}[label={--}]
+          \item \texttt{PubkeyAuthentication yes}: Cho phép chứng thực bằng private key.
+          \item \texttt{PasswordAuthentication no}: Không cho phép chứng thực bằng password.
+        \end{itemize}
+\end{itemize}
+
+Ta cần khởi động lại dịch vụ ssh để áp dụng những thay đổi này (dùng lệnh \texttt{systemctl restart sshd}).
+
+Ta sử dụng lệnh \texttt{ssh-keygen} để tạo private/public key.
+
+\figminiskip{./imgs/Hinh-25.png}{fig:using-ssh-keygen}{Tạo public/private key bằng \texttt{ssh-keygen}}
+
+Tiếp theo, ta cần đổi tên của public key thành authenrized\_keys và phân lại quyền
+cho file này \textit{(\myref{fig:change-authenrized-keys})}.
+
+\figminiskip{./imgs/Hinh-26.png}{fig:change-authenrized-keys}{Đổi tên và phân quyền cho file public key}
+
+
+
+\begin{itemize}[label={--}]
+  \item Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng \texttt{luong.giacat}.\\
+        \begin{coding}[gobble=10]{Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng \texttt{luong.giacat}}
+          sudo -u luong.giacat mv /home/luong.giacat/.ssh/id_rsa.pub\  /home/luong.giacat/.ssh/authorized_keys
+        \end{coding}
+
+  \item Cho phép \texttt{luong.giacat} đọc và ghi vào tập tin \texttt{authorized\_key}.\\
+        \begin{coding}[gobble=10]{Cho phép \texttt{luong.giacat} đọc và ghi vào tập tin \texttt{authorized\_key}}
+          sudo -u luong.giacat chmod 600 \                          /home/luong.giacat/.ssh/authorized_keys
+        \end{coding}
+\end{itemize}
+
+
+

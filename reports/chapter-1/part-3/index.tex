@@ -18,29 +18,29 @@ Cụ thể các bước như sau:
 
 \begin{enumerate}
   \item Tạo nhóm \texttt{truongphong} và thêm người dùng vào.\\
-        \begin{bashlisting}[gobble=10]{Tạo nhóm \texttt{truongphong} và thêm người dùng vào}
+        \begin{coding}[gobble=10]{Tạo nhóm \texttt{truongphong} và thêm người dùng vào}
           sudo groupadd truongphong
           sudo usermod -aG truongphong vu.quan
           sudo usermod -aG truongphong phi.truong
-        \end{bashlisting}
+        \end{coding}
   \item Tạo thư mục \texttt{/data}.\\
-        \begin{bashlisting}[gobble=10]{Tạo thư mục \texttt{/data}}
+        \begin{coding}[gobble=10]{Tạo thư mục \texttt{/data}}
           sudo mkdir /data
-        \end{bashlisting}
+        \end{coding}
   \item Ban giám đốc có toàn quyền (read, write, execute) trên thư mục \texttt{/data}.\\
-        \begin{bashlisting}[gobble=10]{Phân quyền cho ban giám đốc}
+        \begin{coding}[gobble=10]{Phân quyền cho ban giám đốc}
           sudo setfacl -m g:bangiamdoc:rwx /data
-        \end{bashlisting}
+        \end{coding}
   \item Trưởng phòng có quyền read và execute trên thư mục \texttt{/data}.\\
-        \begin{bashlisting}[gobble=10]{Phân quyền cho trưởng phòng}
+        \begin{coding}[gobble=10]{Phân quyền cho trưởng phòng}
           sudo setfacl -m g:truongphong:r-x /data
-        \end{bashlisting}
+        \end{coding}
   \item Nhân viên không có bất cứ quyền gì trên thư mục \texttt{/data}.\\
-        \begin{bashlisting}[gobble=10]{Phân quyền cho nhân viên}
+        \begin{coding}[gobble=10]{Phân quyền cho nhân viên}
           sudo setfacl -m other:--- /data
-        \end{bashlisting}
+        \end{coding}
   \item Chỉ chủ sở hữu tập tin có quyền xóa hoặc đổi tên tập tin trong thư mục \texttt{/data}.
-        \begin{bashlisting}[gobble=10]{Phân quyền cho chủ sở hữu}
+        \begin{coding}[gobble=10]{Phân quyền cho chủ sở hữu}
           sudo chmod +t /data
-        \end{bashlisting}
+        \end{coding}
 \end{enumerate}

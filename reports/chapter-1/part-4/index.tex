@@ -13,9 +13,9 @@
 \figminiskip{./imgs/image51.png}{fig:installing-dhcp}{Cài đặt dịch vụ \texttt{dchp-server}}
 
 \vspace{0.5cm}
-\begin{bashlisting}{Cài đặt dịch vụ \texttt{dchp-server}}
+\begin{coding}{Cài đặt dịch vụ \texttt{dchp-server}}
   sudo yum install dhcp-server -y
-\end{bashlisting}
+\end{coding}
 
 \phantomsection
 \subsubsection{Cấu hình dịch vụ DHCP}
@@ -28,7 +28,7 @@ Ta chỉnh sửa nội dung file \texttt{/etc/dhcp/dhcpd.conf} để cấu hình
 Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
 
 \vspace{0.5cm}
-\begin{bashlisting}{Cài đặt dịch vụ \texttt{dchp-server}}
+\begin{coding}{Cài đặt dịch vụ \texttt{dchp-server}}
   subnet 10.0.2.0 netmask 255.255.255.0 {
       range 10.0.2.50 10.0.2.100;
 
@@ -39,7 +39,7 @@ Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
       default-lease-time 600;
       max-lease-time 7200;
     }
-\end{bashlisting}
+\end{coding}
 
 \begin{itemize}
   \item [\textbf{Dòng 1}] Cấu hình subnet là 255.255.255.0 với địa chỉ mạng là 10.0.2.0.
@@ -56,10 +56,10 @@ Nội dung file \texttt{/etc/dhcp/dhcpd.conf} như sau:
 
 
 \vspace{0.5cm}
-\begin{bashlisting}{Khởi động dịch vụ DHCP}
+\begin{coding}{Khởi động dịch vụ DHCP}
   sudo systemctl start dhcpd
   sudo systemctl enable dhcpd
-\end{bashlisting}
+\end{coding}
 
 \phantomsection
 \subsubsection{Kiểm tra dịch vụ DHCP}

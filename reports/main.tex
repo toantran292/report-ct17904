@@ -16,109 +16,25 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{tocloft}
-
-% Define your custom colors
-\definecolor{bashblue}{rgb}{0.2,0.4,0.8}
-\definecolor{bashgreen}{rgb}{0.2,0.6,0.2}
-\definecolor{bashgray}{rgb}{0.5,0.5,0.5}
-\definecolor{bashpurple}{rgb}{0.6,0.1,0.6}
-\definecolor{bashred}{rgb}{0.6,0.1,0.1}
-
-% Setup the listings package to use colors for Bash code
-\lstdefinestyle{bashstyle}{
-    language=bash,
-    basicstyle=\small\ttfamily,
-    backgroundcolor=\color{gray!10},
-    keywordstyle=\color{bashblue},
-    commentstyle=\color{bashgreen},
-    stringstyle=\color{bashred},
-    numberstyle=\color{bashgray},
-    rulecolor=\color{black},
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    showspaces=false,
-    showstringspaces=false,
-    showtabs=false,
-    tabsize=2,
-    gobble=2,
-    numbers=left,
-    frame=single,
-    numbersep=8pt, % Space between numbers and code
-}
-
-
-\lstnewenvironment{bashlisting}[2][]
-{%
-    \ifthenelse{\equal{#1}{}} % Check if the optional parameter is empty
-    {%
-        \lstset{style=bashstyle, caption={\bfseries\centering#2}} % If empty, set only the caption
-    }
-    {%
-        \lstset{style=bashstyle, caption={\bfseries\centering#2}, #1} % If not empty, set the caption and additional options
-    }
-    \minipage[t]{.93\linewidth}%
-}
-{\endminipage}
+\usepackage[unicode]{hyperref}
+\usepackage{xparse}
+\usepackage{forloop}
+\usepackage{enumitem}
+% \usepackage{tocbibind}
+%Custom package
+\usepackage{./config/code}
+\usepackage{./config/heading}
+\usepackage{./config/figure}
 
 \usetikzlibrary{calc}
 \renewcommand{\baselinestretch}{1.2}
 \setlength{\parskip}{6pt} % Spacing after
 \setlength{\parindent}{1cm}
 
-
-\setcounter{secnumdepth}{4} % Heading
-\titlespacing*{\section}{0pt}{0pt}{12pt} % Heading 1
-\titleformat*{\section}{\fontsize{16pt}{0pt}\selectfont\bfseries}
-
-\titlespacing*{\subsection}{0pt}{10pt}{0pt} % Heading 2
-\titleformat*{\subsection}{\fontsize{14pt}{0pt}\selectfont\bfseries}
-
-\titlespacing*{\subsubsection}{0pt}{10pt}{0pt} % Heading 3
-\titleformat*{\subsubsection}{\fontsize{13pt}{0pt}\selectfont\bfseries\itshape}
-
-\titlespacing*{\paragraph}{0pt}{10pt}{0pt} % Heading 4
-\titleformat*{\paragraph}{\fontsize{13pt}{0pt}\selectfont\itshape}
-
-
-\renewcommand{\tablename}{\fontsize{12pt}{0pt}\selectfont Bảng}
-\renewcommand{\thetable}{\arabic{table}}
-
-
-
-\usepackage{lipsum}
-\renewcommand{\refname}{TÀI LIỆU THAM KHẢO}
-
-\usepackage[unicode]{hyperref}
-\usepackage{forloop}
-
-
-
 \newcommand{\setsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 \newcommand{\setsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
 
 \newcommand{\myref}[1]{\textbf{\hyperref[#1]{Hình~\ref*{#1}}}}
-
-
-
-\newcommand{\figmini}[4][.93]{%
-    \begin{minipage}{#1\linewidth}
-        \captionsetup{type=figure, width=#1\linewidth}
-        \includegraphics[width=\linewidth]{#2}
-        \caption{\centering #4}
-        \label{#3}
-    \end{minipage}%
-}
-
-\newcommand{\figminiskip}[4][.93]{%
-    \begin{minipage}{#1\linewidth}
-        \captionsetup{type=figure, skip=-15pt, width=#1\linewidth}
-        \includegraphics[width=\linewidth]{#2}
-        \caption{\centering #4}
-        \label{#3}
-    \end{minipage}%
-}
 
 % =========================== START DOCUMENT ==================================
 \begin{document}
@@ -132,35 +48,39 @@
 \thispagestyle{empty}
 \cleardoublepage
 
-\pagenumbering{roman}
 
+\pagenumbering{roman}
 % ======= SET UP LIST OF FIGURES =======
 \setlength{\cftfigindent}{0pt}
 \setlength{\cftfignumwidth}{4em}
+\renewcommand{\cftfigdotsep}{1.5}
 \renewcommand{\figurename}{\fontsize{12pt}{0pt}\selectfont Hình}
 \renewcommand{\cftfigpresnum}{\figurename~}
 \renewcommand{\listfigurename}{DANH MỤC HÌNH}
-\addcontentsline{toc}{section}{\numberline{}DANH MỤC HÌNH}
 \phantomsection
+\addcontentsline{toc}{section}{DANH MỤC HÌNH}
 \listoffigures
 \cleardoublepage
 
 % ======= SET UP LIST OF CODES =======
-\renewcommand{\lstlistingname}{\fontsize{12pt}{0pt}\selectfont Code}
-% \renewcommand{\cft}
-\renewcommand{\lstlistlistingname}{DANH MỤC CODE}
-\addcontentsline{toc}{section}{\numberline{}DANH MỤC CODE}
 
-
-\makeatother
-
-\lstlistoflistings
+\phantomsection
+\addcontentsline{toc}{section}{DANH MỤC CODE}
+\listofcode
 \cleardoublepage
 
 % ======= SET UP LIST OF TABLES =======
-
+\setlength{\cfttabindent}{0pt}
+\setlength{\cfttabnumwidth}{4em}
+\renewcommand{\cfttabdotsep}{1.5}
+\renewcommand{\tablename}{\fontsize{12pt}{0pt}\selectfont Bảng}
+\renewcommand{\cfttabpresnum}{\tablename~}
+\renewcommand{\listtablename}{DANH MỤC BẢNG}
+\phantomsection
+\addcontentsline{toc}{section}{DANH MỤC BẢNG}
 \listoftables
 \cleardoublepage
+
 
 
 \section*{Mô tả bài tập}
