@@ -1,2 +1,64 @@
 \phantomsection
 \subsection{(5\%) Cài đặt và cấu hình tường lửa trên server}
+
+\begin{itemize}[label={--}]
+  \item Có thể truy cập các dịch vụ DNS, DHCP, SSH, Web, FTP trên server. Các
+        dịch vụ khác KHÔNG cập truy cập được.
+  \item Chỉ máy desktop có thể SSH tới server, các máy khác KHÔNG SSH được.
+\end{itemize}
+
+
+\phantomsection
+\subsubsection{Cấu hình tường lửa cho phép các dịch vụ DNS, DHCP, SSH, Web, FTP}
+
+Ta cấu hình như sau \textit{(\myref{fig:config-firewall})}
+
+\figminiskip{./imgs/Hinh-41.png}{fig:config-firewall}{Cấu hình tường lửa cho phép các dịch vụ DNS, DHCP, SSH, Web, FTP}
+
+Cụ thể các bước như sau
+\begin{enumerate}
+  \item Khởi động dịch vụ firewalld\\
+        \begin{coding}[gobble=10]{Tạo zone mới có tên là \texttt{services}}
+          sudo systemctl start firewalld
+        \end{coding}
+  \item Tạo một zone mới có tên là \texttt{services}\\
+        \begin{coding}[gobble=10]{Tạo zone mới có tên là \texttt{services}}
+          sudo firewall-cmd --permanent --new-zone=services
+        \end{coding}
+  \item Thêm các dịch vụ DNS, DHCP, SSH, Web, FTP vào zone \texttt{services}\\
+        \begin{coding}[gobble=10]{Thêm các dịch vụ DNS, DHCP, SSH, Web, FTP vào zone \texttt{services}}
+          sudo firewall-cmd --permanent --zone=services \ --add-service=dns
+          sudo firewall-cmd --permanent --zone=services \ --add-service=dhcp
+          sudo firewall-cmd --permanent --zone=services \ --add-service=ssh
+          sudo firewall-cmd --permanent --zone=services \ --add-service=http
+          sudo firewall-cmd --permanent --zone=services \ --add-service=ftp
+        \end{coding}
+  \item Khởi động lại dịch vụ tường lửa để áp dụng những thay đổi này\\
+        \begin{coding}[gobble=10]{Khởi động lại firewalld sau khi đổi zone mới}
+          sudo systemctl restart firewalld
+        \end{coding}
+\end{enumerate}
+
+\phantomsection
+\subsubsection{Cấu hình chỉ cho phép máy desktop mới có thể SSH tới server}
+
+Ta cấu hình như sau \textit{(\myref{fig:config-firewall-2})}
+
+\figminiskip{./imgs/Hinh-44.png}{fig:config-firewall-2}{Cấu hình chỉ cho phép máy desktop mới có thể SSH tới server}
+
+Cụ thể các bước như sau
+\begin{enumerate}
+  \item Thêm một rule mới cho phép desktop (10.0.2.50) vào zone có port 22 (port của SSH)\\
+        \begin{coding}[gobble=10]{Thêm một rule mới cho phép desktop (10.0.2.50) vào zone có port 22 (port của SSH)}
+          sudo firewall-cmd --zone=services --add-rich-rule='rule family="ipv4" source address="10.0.2.50/24" port protocol="tcp" port="22" accept' --permanent
+        \end{coding}
+  \item Xóa dịch vụ SSH ra khỏi zone\\
+        \begin{coding}[gobble=10]{Xóa dịch vụ SSH ra khỏi zone}
+          sudo firewall-cmd --permanent --zone=services \ --remove-serivce=ssh
+        \end{coding}
+  \item Khởi động lại dịch vụ tường lửa để áp dụng những thay đổi này\\
+        \begin{coding}[gobble=10]{Khởi động lại firewalld sau khi thêm rule mới}
+          sudo systemctl restart firewalld
+        \end{coding}
+\end{enumerate}
+

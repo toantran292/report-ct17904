@@ -1,3 +1,97 @@
 \phantomsection
 \subsection{(5\%) Cài đặt và cấu hình dịch vụ DNS trên server để phân giải tên miền
   lautamquoc.com}
+
+Tên miền: www.lautamquoc.com <---> IP: \textcolor{red}{10.0.2.2 (server IP)}
+
+Tên miền: ftp.lautamquoc.com <---> IP: \textcolor{red}{10.0.2.2 (server IP)}
+
+
+\phantomsection
+\subsubsection{Cài đặt dịch vụ DNS}
+Để cài đặt dịch vụ DNS, ta dùng lệnh \texttt{sudo dnf install bind bind-utils}
+
+\phantomsection
+\subsubsection{Cấu hình máy chủ DNS trên server}
+
+\figminiskip{./imgs/Hinh-35.png}{fig:config-named}{Nội dung file /etc/named.conf}
+
+\begin{coding}{Nội dung file /etc/named.conf}
+  ...
+
+  zone "." IN {
+      ...
+    };
+
+  zone "lautamquoc.com" IN {
+  (*@\qquad@*)type master;
+  (*@\qquad@*)file "forward.lautamquoc.com";
+  (*@\qquad@*)allow-update { none; };
+  };
+
+  zone "2.0.10.in-addr.arpa" IN {
+  (*@\qquad@*)type master;
+  (*@\qquad@*)file "reverse.lautamquoc.com";
+  (*@\qquad@*)allow-update { none; };
+  };
+
+  ...
+\end{coding}
+
+\figminiskip{./imgs/Hinh-36.png}{fig:config-forward}{Nội dung file /etc/named/forward.lautamquoc.com}
+
+\begin{coding}{Nội dung file /etc/named/forward.lautamquoc.com}
+  (*@\$@*)TTL 1D
+  @       IN SOA      @       lautamquoc.com. (
+  (*@\qquad@*)                                0       ; serial
+  (*@\qquad@*)                                1D      ; refresh
+  (*@\qquad@*)                                1H      ; retry
+  (*@\qquad@*)                                1W      ; expire
+  (*@\qquad@*)                                3H )    ; minimum
+  @       IN NS       dns.lautamquoc.com.
+  dns     IN A        10.0.2.2
+  www     IN A        10.0.2.2
+  ftp     IN A        10.0.2.1
+\end{coding}
+
+
+\figminiskip{./imgs/Hinh-37.png}{fig:config-reverse}{Nội dung file /etc/named/reverse.lautamquoc.com}
+
+\begin{coding}{Nội dung file /etc/named/reverse.lautamquoc.com}
+  (*@\$@*)TTL 1D
+  @       IN SOA      @       lautamquoc.com. (
+  (*@\qquad@*)                                0       ; serial
+  (*@\qquad@*)                                1D      ; refresh
+  (*@\qquad@*)                                1H      ; retry
+  (*@\qquad@*)                                1W      ; expire
+  (*@\qquad@*)                                3H )    ; minimum
+  @       IN NS       dns.lautamquoc.com.
+  dns     IN A        10.0.2.2
+  2       IN A        www.lautamquoc.com.
+  2       IN A        fpt.lautamquoc.com.
+\end{coding}
+
+
+\phantomsection
+\subsubsection{Khởi động dịch vụ DNS}
+
+Ta khởi động dịch vụ DNS để áp dụng thay đổi.
+
+\begin{coding}{Khởi động dịch vụ DNS}
+  sudo systemctl restart named
+  sudo systemctl enable named
+\end{coding}
+
+
+\phantomsection
+\subsubsection{Kiểm tra trên máy desktop}
+
+Ta sử dụng máy desktop để kiểm tra máy chủ DNS đã cấu hình đúng hay chưa \textit{(\myref{fig:check-dns-desktop})}.
+
+\figminiskip{./imgs/Hinh-38.png}{fig:check-dns-desktop}{Kiểm tra DNS trên máy desktop}
+
+
+Kiểm tra trên trình duyệt web \textit{(\myref{fig:check-dns-browser-desktop})}
+
+\figminiskip{./imgs/Hinh-39.png}{fig:check-dns-browser-desktop}{Sử dụng trình duyệt để kiểm tra DNS server}
+

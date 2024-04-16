@@ -64,13 +64,13 @@ cho file này \textit{(\myref{fig:change-authenrized-keys})}.
 
 
 \begin{itemize}[label={--}]
-  \item Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng \texttt{luong.giacat}.\\
-        \begin{coding}[gobble=10]{Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng \texttt{luong.giacat}}
+  \item Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng Gia Cát Lượng.\\
+        \begin{coding}[gobble=10]{Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng Gia Cát Lượng}
           sudo -u luong.giacat mv \ /home/luong.giacat/.ssh/id_rsa.pub \ /home/luong.giacat/.ssh/authorized_keys
         \end{coding}
 
-  \item Cho phép \texttt{luong.giacat} đọc và ghi vào tập tin \texttt{authorized\_key}.\\
-        \begin{coding}[gobble=10]{Cho phép \texttt{luong.giacat} đọc và ghi vào tập tin \texttt{authorized\_key}}
+  \item Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_key}.\\
+        \begin{coding}[gobble=10]{Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_key}}
           sudo -u luong.giacat chmod 600 \ /home/luong.giacat/.ssh/authorized_keys
         \end{coding}
 \end{itemize}
