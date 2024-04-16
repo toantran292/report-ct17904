@@ -1,4 +1,81 @@
 \phantomsection
 \subsection{(5\%) Sử dụng dịch vụ cron và shell script tự động thực hiện công việc sao lưu
   dữ liệu mỗi ngày, mỗi tuần, mỗi tháng trên server}
-\setcounter{figure}{0}
+
+
+\begin{itemize}
+  \item[+] Các thư mục cần sao lưu sao lưu: \texttt{/home, /data, /etc}.
+  \item[+] Nơi lưu dữ liệu sao lưu: \texttt{/mnt/backup}.
+  \item[--] Sao lưu mỗi ngày: thực hiện vào lúc 23:59 từ thứ 2 đến thứ 7, dữ liệu sẽ được nén lại và lưu với tên như sau: backup\_<thứ> (ví dụ: \texttt{backup\_monday}).
+  \item[--] Sao lưu mỗi tuần: thực hiện vào lúc 23:59 ngày chủ nhật hàng tuần, dữ liệu sẽ được nén lại và lưu với tên như sau: backup\_week<thứ tự tuần> (ví dụ: \texttt{backup\_week1}).
+  \item[--] Sao lưu mỗi tháng: thực hiện vào lúc 23:59 ngày 1 hằng tháng, dữ liệu sẽ được nén lại và lưu với tên \texttt{backup\_month1} nếu là tháng lẻ, \texttt{backup\_month2} nếu là tháng chẵn.
+\end{itemize}
+
+\phantomsection
+\subsubsection{Tạo thư mục sao lưu dữ liệu}
+
+Ta sẽ tạo thư mục \texttt{/mnt/backup} để lưu trữ dữ liệu sao lưu.
+
+\begin{coding}{Ta sẽ tạo thư mục \texttt{/mnt/backup} để lưu trữ dữ liệu sao lưu.}
+  sudo mkdir /mnt/backup
+\end{coding}
+
+
+\phantomsection
+\subsubsection{Viết shell script backup}
+
+Ta viết script thực hiện việc sao lưu dữ liệu theo các bước như sau:
+\begin{itemize}[label={--}]
+  \item Tạo một biến lưu trữ tên file
+  \item Nén thư mục \texttt{/home, /data, /etc}
+\end{itemize}
+
+\figminiskip{./imgs/Hinh-46.png}{fig:backup-day}{Script backup mỗi ngày}
+
+\begin{coding}{Script backup mỗi ngày}
+  filename="/mnt/backup/backup_(*@\textcolor{bashred}{\$}@*)(date + %A).zip"
+  echo "Compressing: (*@\textcolor{bashred}{\$}@*)filename"
+  zip -qr (*@\$@*)filename /home /data /etc
+  echo "Backup finish."
+\end{coding}
+
+\figminiskip{./imgs/Hinh-47.png}{fig:backup-week}{Script backup mỗi tuần}
+
+\begin{coding}{Script backup mỗi tuần}
+  filename="/mnt/backup/backup_week(*@\textcolor{bashred}{\$}@*)(date + %U).zip"
+  echo "Compressing: (*@\textcolor{bashred}{\$}@*)filename"
+  zip -qr (*@\$@*)filename /home /data /etc
+  echo "Backup finish."
+\end{coding}
+
+\figminiskip{./imgs/Hinh-48.png}{fig:backup-month}{Script backup mỗi tháng}
+
+\begin{coding}{Script backup mỗi tháng}
+  month=(*@\$@*)(date + %m)
+
+  if ((month % 2 == 0))
+  then
+  (*@\qquad@*)suffix="2"
+  else
+  (*@\qquad@*)suffix="1"
+  fi
+
+  filename="/mnt/backup/backup_month(*@\textcolor{bashred}{\$}@*)suffix.zip"
+  echo "Compressing: (*@\textcolor{bashred}{\$}@*)filename"
+  zip -qr (*@\$@*)filename /home /data /etc
+  echo "Backup finish."
+\end{coding}
+
+
+\phantomsection
+\subsubsection{Cấu hình cron}
+
+Ta cấu hình cron thực thi script backup như sau
+
+\figminiskip{./imgs/Hinh-49.png}{fig:config-cron}{Cấu hình cron}
+
+\begin{coding}{Cấu hình cron}
+  59  23  *   *   1-6 (/mnt/backup/backup_day.sh)
+  59  23  *   *   0   (/mnt/backup/backup_week.sh)
+  59  23  1   *   *   (/mnt/backup/backup_month.sh)
+\end{coding}
