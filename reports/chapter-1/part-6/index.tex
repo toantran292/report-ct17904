@@ -1,2 +1,160 @@
 \phantomsection
-\subsection{(10\%) Cài đặt và cấu hình dịch vụ máy chủ Web trên server}
+\subsection{(10\%) Cài đặt và cấu hình dịch vụ máy chủ Web trên server sử dụng Docker}
+
+Cài đặt và cấu hình dịch vụ máy chủ Web trên server. Tạo một trang web
+cho công ty có tên miền lautamquoc.com với nội dung trang chủ giới thiệu về các
+thành viên trong công ty.
+
+\phantomsection
+\subsubsection{Xây dựng trang web}
+
+Ta sẽ sử dụng mã nguồn trang web (sử dụng thư viện ReactJS và Vitejs): \url{https://github.com/toantran292/lautamquoc.com}
+
+\figmini{./imgs/Hinh-28.png}{fig:source-code}{Cấu trúc trang web lautamquoc.com}
+
+\phantomsection
+\subsubsection{Cấu hình cho Docker và nginx}
+
+Ta cần quan tâm đến các file sau:
+
+\begin{itemize}[label={--}]
+  \item \texttt{/Dockerfile}: dùng để build image cho container.\\
+        \begin{coding}[gobble=10]{Nội dung file \texttt{/Dockerfile}}
+          FROM node:20-alpine as development
+
+          WORKDIR /app
+
+          COPY package*.json .
+
+          RUN npm ci
+
+          COPY . .
+
+          CMD ["npm", "run", "dev"]
+
+          FROM development as production
+
+          RUN npm run build
+
+          FROM nginx:alpine
+
+          COPY --from=production /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+          WORKDIR /usr/share/nginx/html
+
+          RUN rm -rf ./*
+
+          COPY --from=production /app/dist .
+
+          ENTRYPOINT ["nginx", "-g", "daemon off;"]
+        \end{coding}
+
+        Có ý nghĩa cụ thể như sau:
+
+        \begin{itemize}
+          \item[\bfseries Dòng 01 - 11:] \textbf{Tạo môi trường phát triển bên trong docker container}
+            \begin{itemize}
+              \item[1] Sử dụng image \texttt{node:20-alphine} làm base image.
+              \item[3] Đặt \texttt{/app} làm thư mục làm việc bên trong image.
+              \item[5] Sao chép tập tin package.json và package-lock.json vào bên trong image.
+              \item[7] Cài đặt các thư viện.
+              \item[9] Sao chép toàn bộ mã nguồn dự án vào image.
+              \item[11] Câu lệnh \texttt{npm run dev} được dùng để chạy dev server (do Vitejs cấu hình).
+            \end{itemize}
+          \item[\bfseries Dòng 13 - 15:] \textbf{Build production}
+            \begin{itemize}
+              \item[13] Sử dụng image từ image development làm base image.
+              \item[15] Câu lệnh \texttt{npm run build} sẽ tạo ra bản build của dự án nằm ở thư mục \texttt{/dist}
+            \end{itemize}
+          \item[\bfseries Dòng 17 - 27:] \textbf{Cấu hình cho nginx}
+            \begin{itemize}
+              \item[17] Sử dụng image \texttt{nginx:alpine} làm base image.
+              \item[19] Sao chép file cấu hình \texttt{/nginx.conf} từ image production vào image và đồng thời đổi tên thành \texttt{/default.conf}
+              \item[21] Đặt \texttt{/usr/share/nginx/html} làm thư mục làm việc.
+              \item[23] Xóa trang web mặc định của nginx.
+              \item[25] Sao chép bản build từ image production.
+              \item[27] Lệnh \texttt{ngix -g daemon off;} sẽ chạy nginx và không thoát ra.
+            \end{itemize}
+        \end{itemize}
+
+  \item \texttt{/docker-compose.yml}: dùng để build và run các container.\\
+        \begin{coding}[gobble=10]{Nội dung file \texttt{/docker-compose.yml}}
+          version: '3.8'
+
+          services:
+          (*@\quad@*)lautamquoc.com:
+          (*@\qquad@*)build: .
+          (*@\qquad@*)container_name: lautamquoc.com
+          (*@\qquad@*)ports:
+          (*@\qquad@*)  - '80:80'
+        \end{coding}
+
+        Có ý nghĩa cụ thể như sau:
+        \begin{itemize}
+          \item[\bfseries Dòng 1] Sử dụng phiên bản 3.8 của docker-compose.
+          \item[\bfseries Dòng 4] Tạo một service có tên lautamquoc.com.
+          \item[\bfseries Dòng 5] Sử dụng \texttt{Dockerfile} để build image cho services này.
+          \item[\bfseries Dòng 6] Đặt tên cho container là lautamquoc.com.
+          \item[\bfseries Dòng 8] Chỉ định cổng 80 của máy hót sẽ được map vào cổng 80 của container.
+        \end{itemize}
+
+  \item \texttt{/.nginx/nginx.conf}: dùng để cấu hình cho nginx.\\
+        \begin{coding}[gobble=10]{Nội dung file \texttt{/.nginx/nginx.conf}}
+          server {
+          (*@@*) server_name lautamquoc.com www.lautamquoc.com;
+
+          (*@@*) listen 80;
+
+          (*@@*) location / {
+          (*@@*)  root /usr/share/nginx/html;
+          (*@@*)  index index.html index.htm;
+          (*@@*)  try_files (*@\$@*)uri /index.html =404;
+          (*@@*) }
+
+          (*@@*) error_page 500 502 503 504 /50x.html;
+
+          (*@@*) location = /50x.html {
+          (*@@*)  root /usr/share/nginx/html;
+          (*@@*) }
+          }
+        \end{coding}
+
+        Có ý nghĩa cụ thể như sau:
+        \begin{itemize}
+          \item[\bfseries Dòng 2] Cấu hình server name là lautamquoc.com và www.lautamquoc.com, khi một request có domain là lautamquoc.com (hoặc www.lautamquoc.com) được gửi đến server thì nginx sẽ xử lý request này.
+          \item[\bfseries Dòng 4] Cấu hình nginx sẽ lắng nghe ở port 80.
+          \item[\bfseries Dòng 7] Cấu hình thư mục root là \texttt{/usr/share/nginx/html}.
+          \item[\bfseries Dòng 8] Cấu hình file index mặc định là index.html.
+          \item[\bfseries Dòng 9] Cấu hình thử các file tĩnh nếu không tìm thấy file index.html, do đây là trang web SPA (Single Page Application) nên ta sẽ thử các file tĩnh trước khi trả về trang index.html.
+          \item[\bfseries Dòng 12] Cấu hình trang 50x.html.
+          \item[\bfseries Dòng 15] Cấu hình thư mục root cho trang 50x.html là \texttt{/usr/share/nginx/html}.
+        \end{itemize}
+\end{itemize}
+
+
+\phantomsection
+\subsubsection{Khởi chạy trang web trên máy server}
+
+Để chạy thử web trên máy server, ta dùng lệnh
+\texttt{docker compose up} để docker sẽ tự động kéo
+các image từ cloud về và build image cho service lautamquoc.com
+sau đó khởi chạy container từ
+image này như \textit{(\myref{fig:run-webserver})}.
+
+\figminiskip{./imgs/Hinh-29.png}{fig:run-webserver}{Khởi chạy trang web bằng \texttt{docker compose up}}
+
+Lúc này, trang web sẽ chạy trên cổng 80 của máy server như đã cấu
+hình trong file \texttt{docker-compose.yml} \textit{(\myref{fig:ui-webserver})}.
+
+\figminiskip{./imgs/Hinh-30.png}{fig:ui-webserver}{Giao diện trang web lautamquoc.com}
+
+Ta có thể chỉnh sửa DNS của máy server để trỏ tên
+miền lautamquoc.com về địa chỉ localhost để kiểm tra nginx đã hoạt
+động chính xác hay chưa \textit{(\myref{fig:config-dns-test})}.
+
+\figminiskip{./imgs/image33.png}{fig:config-dns-test}{Chỉnh sửa file \texttt{/etc/hosts} để trỏ tên miền lautamquoc.com về địa chỉ localhost}
+
+Sau khi cấu hình xong, ta có thể truy cập vào
+trang web theo địa chỉ như sau \texttt{http://lautamquoc.com} \textit{(\myref{fig:ui-dns-test})}.
+
+\figminiskip{./imgs/image8.png}{fig:ui-dns-test}{Truy cập vào trang web từ server qua địa chỉ \texttt{http://lautamquoc.com}}
