@@ -1,2 +1,70 @@
 \phantomsection
 \subsection{(5\%) Cài đặt và cấu hình dịch vụ máy chủ FTP trên server}
+Cài đặt và cấu hình dịch vụ máy chủ FTP trên server. Cấu hình chỉ cho
+phép người dùng download (không được upload) dữ liệu từ thư mục \texttt{/data} trên
+server. Không cho phép người dùng chuyển sang thư mục khác, chỉ được làm việc
+trong thư mục \texttt{/data}.
+
+\phantomsection
+\subsubsection{Cài đặt dịch vụ FTP}
+
+Để cài đặt dịch vụ FTP, ta sử dụng lệnh \texttt{sudo dnf install vsftpd}. Sau đó ta tiến hành cấu hình dịch vụ trong file \texttt{/etc/vsftpd/vsftpd.conf}.
+
+\phantomsection
+\subsubsection{Cấu hình dịch vụ FTP}
+
+Ta thực hiện việc cấu hình cho dịch vụ FTP
+như \textit{(\myref{fig:config-vsftpd})}.
+
+\figminiskip{./imgs/Hinh-31.png}{fig:config-vsftpd}{Nội dung file \texttt{/etc/vsftpd/vsftpd.conf}}
+
+\begin{coding}{Nội dung file \texttt{/etc/vsftpd/vsftpd.conf}}
+  ...
+
+  listen=YES
+  listen_ipv6=NO
+
+  anonymous_enable=NO
+  local_enable=YES
+
+  local_root=/data
+  chroot_local_user=YES
+
+  write_enable=NO
+  allow_writeable_chroot=NO
+
+  ...
+\end{coding}
+
+\begin{itemize}
+  \item[\bfseries Dòng 3] Cấu hình cho phép máy chủ FTP lắng nghe các kết nối từ máy khác.
+  \item[\bfseries Dòng 4] Cấu hình vô hiệu hóa lắng nghe trên IPv6.
+  \item[\bfseries Dòng 6] Cấu hình không cho phép người vô danh truy cập.
+  \item[\bfseries Dòng 7] Cấu hình cho phép các tài khoản cục bộ truy cập.
+  \item[\bfseries Dòng 9] Cấu hình xác định thư mục gốc là \texttt{/data}.
+  \item[\bfseries Dòng 10] Cấu hình giới hạn hoạt động người dùng trong thư mục dược xác định bởi \texttt{local\_root}.
+  \item[\bfseries Dòng 12] Cấu hình vô hiệu hóa quyền ghi cho người dùng (không cho phép upload).
+  \item[\bfseries Dòng 13] Cấu hình vô hiệu hóa quyền ghi trong môi trường \texttt{/chroot} (không cho phép upload).
+\end{itemize}
+
+Sau đó, ta cần khởi chạy dịch vụ FTP .
+
+\begin{coding}{Khởi chạy dịch vụ FTP}
+  sudo systemctl start vsftpd
+  sudo systemctl enable vsftpd
+\end{coding}
+
+\phantomsection
+\subsubsection{Sử dụng máy desktop để kiểm tra kết nối tới dịch vụ FTP}
+Trên máy server ta tạo ra một file \texttt{test.txt}
+trong thư mục \texttt{/data} như  \textit{(\myref{fig:create-test-vsftpd})}
+
+\figminiskip{./imgs/Hinh-33.png}{fig:create-test-vsftpd}{Tạo file \texttt{/data/test.txt} trên máy server}
+
+
+Trên máy desktop ta kết nối tới dịch vụ FTP
+bằng cách sử dụng lệnh như sau \texttt{ftp <ftp-host>},
+và dùng các lệnh \texttt{get <file-name>} và
+\texttt{put <file-name>} để download và upload file như \textit{(\myref{fig:connect-vsftpd})}.
+
+\figminiskip{./imgs/Hinh-34.png}{fig:connect-vsftpd}{Kiểm tra kết nối tới dịch vụ FTP trên máy desktop}
