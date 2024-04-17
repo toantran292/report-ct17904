@@ -52,7 +52,7 @@ Ta cần khởi động lại dịch vụ ssh để áp dụng những thay đ�
 
 Ta cần khởi động lại dịch vụ ssh để áp dụng những thay đổi này (dùng lệnh \texttt{systemctl restart sshd}).
 
-Ta sử dụng lệnh \texttt{ssh-keygen} để tạo private/public key.
+Ta sử dụng lệnh \texttt{ssh-keygen} để tạo private/public key và đặt câu lệnh \texttt{sudo -u luong.giacat} phía trước để thao tác dưới tài khoản \texttt{luong.giacat}.
 
 \figminiskip{./imgs/Hinh-25.png}{fig:using-ssh-keygen}{Tạo public/private key bằng \texttt{ssh-keygen}}
 
@@ -64,13 +64,13 @@ cho file này \textit{(\myref{fig:change-authenrized-keys})}.
 
 
 \begin{itemize}[label={--}]
-  \item Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng Gia Cát Lượng.\\
-        \begin{coding}[gobble=10]{Đổi tên tập tin public key thành \texttt{authorized\_key} cho người dùng Gia Cát Lượng}
+  \item Đổi tên tập tin public key thành \texttt{authorized\_keys} cho người dùng Gia Cát Lượng.\\
+        \begin{coding}[gobble=10]{Đổi tên tập tin public key thành \texttt{authorized\_keys} cho người dùng Gia Cát Lượng}
           sudo -u luong.giacat mv \ /home/luong.giacat/.ssh/id_rsa.pub \ /home/luong.giacat/.ssh/authorized_keys
         \end{coding}
 
-  \item Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_key}.\\
-        \begin{coding}[gobble=10]{Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_key}}
+  \item Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_keys}.\\
+        \begin{coding}[gobble=10]{Cho phép Gia Cát Lượng đọc và ghi vào tập tin \texttt{authorized\_keys}}
           sudo -u luong.giacat chmod 600 \ /home/luong.giacat/.ssh/authorized_keys
         \end{coding}
 \end{itemize}
